@@ -1,0 +1,26 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: nacos-external
+  labels:
+    app: nacos-external
+spec:
+  ports:
+    - protocol: TCP
+      port: 8848
+      targetPort: 8848
+      nodePort: 31848
+      name: nacos-8848
+    - protocol: TCP
+      port: 9848
+      targetPort: 9848
+      nodePort: 32848
+      name: nacos-9848
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 38080
+      name: nacos-8080
+  selector:
+    app: nacos
+  type: NodePort

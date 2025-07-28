@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nfs-client-provisioner
+  labels:
+    app: nfs-client-provisioner
+  # replace with namespace where provisioner is deployed
+  namespace: nfs-system
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: nfs-client-provisioner
+  template:
+    metadata:
+      labels:
+        app: nfs-client-provisioner
+    spec:
+      serviceAccountName: nfs-client-provisioner
+      containers:
+        - name: nfs-client-provisioner
+          image: swr.cn-north-4.myhuaweicloud.com/ddn-k8s/registry.k8s.io/sig-storage/nfs-subdir-external-provisioner:v4.0.2
+          volumeMounts:
+            - name: nfs-client-root
+              mountPath: /persistentvolumes
+          env:
+            - name: PROVISIONER_NAME
+              value: k8s-sigs.io/nfs-subdir-external-provisioner
+            - name: NFS_SERVER
+              value: 192.168.146.130
+            - name: NFS_PATH
+              value: /root/data/nfs
+      volumes:
+        - name: nfs-client-root
+          nfs:
+            server: 192.168.146.130
+            path: /root/data/nfs

@@ -1,0 +1,38 @@
+# bootstrap.yml 比 application.yml 加载更早，用于配置 Nacos 等配置中心
+spring:
+  application:
+    name: demo-service  # 应用名称，对应 Nacos 中的配置集名称
+  cloud:
+    nacos:
+      # 服务发现配置
+      discovery:
+        # Nacos 集群地址，使用 Kubernetes 中暴露的 Nacos 服务地址
+        # 假设在 Kubernetes 中通过 NodePort 或 Ingress 暴露了 Nacos 服务
+        server-addr: ${NACOS_SERVER:nacos-external}:${NACOS_PORT:8848}
+        # 命名空间，默认为 public，如果有自定义命名空间请修改
+        namespace: public
+        # 分组，默认为 DEFAULT_GROUP
+        group: DEFAULT_GROUP
+        # 权重，范围 0-100
+        weight: 100
+        # 元数据
+        metadata:
+          version: 1.0
+          author: dev-team
+      # 配置中心配置
+      config:
+        # Nacos 配置中心地址，与服务发现地址可以相同
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        # 配置文件格式
+        file-extension: yaml
+        # 命名空间，与服务发现保持一致
+        namespace: ${spring.cloud.nacos.discovery.namespace}
+        # 配置分组
+        group: ${spring.cloud.nacos.discovery.group}
+        # 配置刷新开关
+        refresh-enabled: true
+        # 超时时间
+        timeout: 5000
+  config:
+    import:
+      - nacos:${spring.application.name}.${spring.cloud.nacos.config.file-extension}?group=${spring.cloud.nacos.config.group}

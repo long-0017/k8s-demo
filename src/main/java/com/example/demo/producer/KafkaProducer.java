@@ -2,6 +2,7 @@ package com.example.demo.producer;
 
 import com.example.demo.dto.MessageDTO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,7 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class KafkaProducer {
 
     private final KafkaTemplate<String, MessageDTO> kafkaTemplate;
@@ -36,16 +38,15 @@ public class KafkaProducer {
                 kafkaTemplate.send(TOPIC_NAME, message.getId(), message);
 
         // 处理发送结果
-        future.addCallback(new ListenableFutureCallback<SendResult<String, MessageDTO>>() {
+        future.addCallback(new ListenableFutureCallback<>() {
             @Override
             public void onSuccess(SendResult<String, MessageDTO> result) {
-                System.out.println("消息发送成功: " + message.getId() +
-                        ", 分区: " + result.getRecordMetadata().partition());
+                log.info("消息发送成功: {}, 分区: {}", message.getId(), result.getRecordMetadata().partition());
             }
 
             @Override
             public void onFailure(Throwable ex) {
-                System.err.println("消息发送失败: " + message.getId() + ", 原因: " + ex.getMessage());
+                log.error("消息发送失败: {}, 原因: {}", message.getId(), ex.getMessage());
             }
         });
     }

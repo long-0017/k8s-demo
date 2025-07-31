@@ -1,8 +1,8 @@
 package com.example.demo.controller;
 
-import com.alibaba.nacos.api.config.annotation.NacosValue;
 import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/users")
 @RefreshScope
+@Slf4j
 public class UserController {
 
     @Autowired
@@ -26,13 +27,13 @@ public class UserController {
 
     @GetMapping("/{id}")
     public User getUser(@PathVariable Long id) {
-        System.out.printf("getUser(%s)\n", id);
+        log.info("getUser:{}", id);
         return userService.getUser(id);
     }
 
     @PostMapping
     public User saveUser(@RequestBody User user) {
-        System.out.printf("saveUser(%s)\n", user);
+        log.info("saveUser:{}", user);
         return userService.saveUser(user);
     }
 }    

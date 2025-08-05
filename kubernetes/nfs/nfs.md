@@ -78,10 +78,11 @@ kubectl create -f deploy/rbac.yaml
 ### 3.4 配置 NFS subdir external provisioner
 编辑 provisioner's deployment 文件 deploy/deployment.yaml，重点修改以下内容：
 
-image: 默认使用 registry.k8s.io 镜像仓库的镜像 nfs-subdir-external-provisioner:v4.0.2，网络受限时需要想办法下载并上传到方便访问的镜像仓库
-NFS 服务器的主机名或是 IP 地址
-NFS 服务器导出的共享数据目录的路径（exportfs）
-文件 deployment.yaml 默认内容如下：
+- image: 默认使用 registry.k8s.io 镜像仓库的镜像 nfs-subdir-external-provisioner:v4.0.2，网络受限时需要想办法下载并上传到方便访问的镜像仓库
+- NFS 服务器的主机名或是 IP 地址
+- NFS 服务器导出的共享数据目录的路径（exportfs）
+
+文件 deployment.yaml 内容如下：
 
 ```yaml
 apiVersion: apps/v1
@@ -123,15 +124,6 @@ spec:
           nfs:
             server: 192.168.146.130
             path: /root/data/nfs
-```
-说明：主要修改内容，用实际 NFS 配置信息替换默认值（受限于篇幅，未展示最终修改后的内容）
-
-```yaml
-image:  registry.k8s.io/sig-storage/nfs-subdir-external-provisioner:v4.0.2
-  
-value: 192.168.146.130
-
-value: /root/data/nfs
 ```
 
 ## 3.5 部署 NFS Subdir External Provisioner

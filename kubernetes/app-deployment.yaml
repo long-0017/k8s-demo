@@ -48,8 +48,7 @@ spec:
           value: "nacos-headless"
         - name: NACOS_PORT
           value: "8848"
-        # 集群内的访问kafka-svc.kafka.svc.cluster.local
         - name: KAFKA_SERVER
-          value: "kafka-svc.kafka.svc.cluster.local"
+          value: "kafka-svc.kafka.svc.cluster.local"  # 集群内的访问kafka-svc.kafka.svc.cluster.local
         - name: KAFKA_PORT
           value: "9092"
